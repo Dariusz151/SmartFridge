@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SmartFridge.Models;
 
 namespace SmartFridge
 {
@@ -26,6 +27,11 @@ namespace SmartFridge
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddScoped<ISmartFridgeRepository, InMemoryFridgeRepository>();
+            services.AddMvc();
+            services.AddSingleton<IConfiguration>(Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +45,20 @@ namespace SmartFridge
             {
                 app.UseHsts();
             }
+
+            DefaultFilesOptions options = new DefaultFilesOptions();
+            options.DefaultFileNames.Clear();
+            options.DefaultFileNames.Add("index.html");
+
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //              name: "default",
+            //              template: "{controller=Home}/{action=Index}/{id?}");
+            //});
+
+            app.UseDefaultFiles(options);
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
             app.UseMvc();

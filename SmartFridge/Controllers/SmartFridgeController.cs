@@ -1,0 +1,116 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartFridge.Models;
+using System;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace SmartFridge.Controllers
+{
+    [Produces("application/json")]
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SmartFridgeController : Controller
+    {
+        private static ISmartFridgeRepository _repository;
+
+        public SmartFridgeController(ISmartFridgeRepository repository)
+        {
+            _repository = repository;
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(FridgeItem))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var list = await _repository.GetAllAsync();
+            if (list == null)
+                return NotFound();
+            return Json(list);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(FridgeItem))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            var item = await _repository.GetAsync(id);
+            if (item == null)
+                return NotFound();
+            return Json(item);
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(int))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.MethodNotAllowed)]
+        public async Task<IActionResult> CreateAsync([FromBody] FridgeItem item)
+        {
+            if (item == null)
+            {
+                Console.WriteLine("[HttpPost] Jestem w Item=Null, zwracam BadRequest");
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.ArticleName))
+            {
+                Console.WriteLine("[HttpPost] ArticleName NullOrEmpty");
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.Quantity.ToString()))
+            {
+                Console.WriteLine("[HttpPost] Quantity NullOrEmpty");
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.Weight))
+            {
+                Console.WriteLine("[HttpPost] Weight NullOrEmpty");
+                return BadRequest();
+            }
+     
+            int createdId = await _repository.CreateAsync(item);
+            if (createdId > 0)
+                return Ok(createdId);
+            return BadRequest();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            if (await _repository.DeleteAsync(id))
+                return new NoContentResult();
+
+            return BadRequest();
+        }
+
+
+        //// GET api/values/5
+        //[HttpGet("{id}")]
+        //public ActionResult<string> Get(int id)
+        //{
+        //    return "value";
+        //}
+
+        //// POST api/values
+        //[HttpPost]
+        //public void Post([FromBody] string value)
+        //{
+        //}
+
+        //// PUT api/values/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
+        //}
+
+        //// DELETE api/values/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
+
+    }
+
+
+}
