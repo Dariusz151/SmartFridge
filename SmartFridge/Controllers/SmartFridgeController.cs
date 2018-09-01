@@ -40,77 +40,48 @@ namespace SmartFridge.Controllers
             return Json(item);
         }
 
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(int))]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.MethodNotAllowed)]
-        public async Task<IActionResult> CreateAsync([FromBody] FridgeItem item)
-        {
-            if (item == null)
-            {
-                Console.WriteLine("[HttpPost] Jestem w Item=Null, zwracam BadRequest");
-                return BadRequest();
-            }
-            if (string.IsNullOrEmpty(item.ArticleName))
-            {
-                Console.WriteLine("[HttpPost] ArticleName NullOrEmpty");
-                return BadRequest();
-            }
-            if (string.IsNullOrEmpty(item.Quantity.ToString()))
-            {
-                Console.WriteLine("[HttpPost] Quantity NullOrEmpty");
-                return BadRequest();
-            }
-            if (string.IsNullOrEmpty(item.Weight))
-            {
-                Console.WriteLine("[HttpPost] Weight NullOrEmpty");
-                return BadRequest();
-            }
-     
-            int createdId = await _repository.CreateAsync(item);
-            if (createdId > 0)
-                return Ok(createdId);
-            return BadRequest();
-        }
-
-        [HttpDelete("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            if (await _repository.DeleteAsync(id))
-                return new NoContentResult();
-
-            return BadRequest();
-        }
-
-
-        //// GET api/values/5
-        //[HttpGet("{id}")]
-        //public ActionResult<string> Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        //// POST api/values
         //[HttpPost]
-        //public void Post([FromBody] string value)
+        //[ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(int))]
+        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        //[ProducesResponseType((int)HttpStatusCode.MethodNotAllowed)]
+        //public async Task<IActionResult> CreateAsync([FromBody] FridgeItem item)
         //{
+        //    if (item == null)
+        //    {
+        //        Console.WriteLine("[HttpPost] Jestem w Item=Null, zwracam BadRequest");
+        //        return BadRequest();
+        //    }
+        //    if (string.IsNullOrEmpty(item.ArticleName))
+        //    {
+        //        Console.WriteLine("[HttpPost] ArticleName NullOrEmpty");
+        //        return BadRequest();
+        //    }
+        //    if (string.IsNullOrEmpty(item.Quantity.ToString()))
+        //    {
+        //        Console.WriteLine("[HttpPost] Quantity NullOrEmpty");
+        //        return BadRequest();
+        //    }
+        //    if (string.IsNullOrEmpty(item.Weight))
+        //    {
+        //        Console.WriteLine("[HttpPost] Weight NullOrEmpty");
+        //        return BadRequest();
+        //    }
+     
+        //    int createdId = await _repository.CreateAsync(item);
+        //    if (createdId > 0)
+        //        return Ok(createdId);
+        //    return BadRequest();
         //}
 
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/values/5
         //[HttpDelete("{id}")]
-        //public void Delete(int id)
+        //[ProducesResponseType((int)HttpStatusCode.NoContent)]
+        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        //public async Task<IActionResult> DeleteAsync(int id)
         //{
+        //    if (await _repository.DeleteAsync(id))
+        //        return new NoContentResult();
+
+        //    return BadRequest();
         //}
-
     }
-
-
 }

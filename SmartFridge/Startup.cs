@@ -28,7 +28,8 @@ namespace SmartFridge
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddScoped<ISmartFridgeRepository, InMemoryFridgeRepository>();
+            //services.AddScoped<ISmartFridgeRepository, InMemoryFridgeRepository>();
+            services.AddScoped<ISmartFridgeRepository, DBFridgeRepository>();
             services.AddMvc();
             services.AddSingleton<IConfiguration>(Configuration);
 
