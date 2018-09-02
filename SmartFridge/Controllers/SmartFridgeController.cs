@@ -40,48 +40,89 @@ namespace SmartFridge.Controllers
             return Json(item);
         }
 
-        //[HttpPost]
-        //[ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(int))]
-        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        //[ProducesResponseType((int)HttpStatusCode.MethodNotAllowed)]
-        //public async Task<IActionResult> CreateAsync([FromBody] FridgeItem item)
-        //{
-        //    if (item == null)
-        //    {
-        //        Console.WriteLine("[HttpPost] Jestem w Item=Null, zwracam BadRequest");
-        //        return BadRequest();
-        //    }
-        //    if (string.IsNullOrEmpty(item.ArticleName))
-        //    {
-        //        Console.WriteLine("[HttpPost] ArticleName NullOrEmpty");
-        //        return BadRequest();
-        //    }
-        //    if (string.IsNullOrEmpty(item.Quantity.ToString()))
-        //    {
-        //        Console.WriteLine("[HttpPost] Quantity NullOrEmpty");
-        //        return BadRequest();
-        //    }
-        //    if (string.IsNullOrEmpty(item.Weight))
-        //    {
-        //        Console.WriteLine("[HttpPost] Weight NullOrEmpty");
-        //        return BadRequest();
-        //    }
-     
-        //    int createdId = await _repository.CreateAsync(item);
-        //    if (createdId > 0)
-        //        return Ok(createdId);
-        //    return BadRequest();
-        //}
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(int))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.MethodNotAllowed)]
+        public async Task<IActionResult> CreateAsync([FromBody] FridgeItem item)
+        {
+            Console.WriteLine("[Controller] item: " + item.ArticleName);
+            Console.WriteLine("[Controller] item: " + item.Weight);
+            Console.WriteLine("[Controller] item: " + item.Quantity);
 
-        //[HttpDelete("{id}")]
-        //[ProducesResponseType((int)HttpStatusCode.NoContent)]
-        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        //public async Task<IActionResult> DeleteAsync(int id)
-        //{
-        //    if (await _repository.DeleteAsync(id))
-        //        return new NoContentResult();
+            if (item == null)
+            {
+                Console.WriteLine("[HttpPost] Jestem w Item=Null, zwracam BadRequest");
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.ArticleName))
+            {
+                Console.WriteLine("[HttpPost] ArticleName NullOrEmpty");
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.Quantity.ToString()))
+            {
+                Console.WriteLine("[HttpPost] Quantity NullOrEmpty");
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.Weight.ToString()))
+            {
+                Console.WriteLine("[HttpPost] Weight NullOrEmpty");
+                return BadRequest();
+            }
 
-        //    return BadRequest();
-        //}
+            int createdId = await _repository.CreateAsync(item);
+            Console.WriteLine("Controller, createdID: " + createdId);
+            if (createdId > 0)
+                return Json(createdId);
+            return BadRequest();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            if (await _repository.DeleteAsync(id))
+                return new NoContentResult();
+
+            return BadRequest();
+        }
+
+        [Route("~/api/SmartFridge")]
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.MethodNotAllowed)]
+        public async Task<IActionResult> UpdateAsync([FromBody] FridgeItem item)
+        {
+            if (item == null)
+            {
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.ArticleName))
+            {
+                Console.WriteLine("[HttpPut] ArticleName NullOrEmpty");
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.Quantity.ToString()))
+            {
+                Console.WriteLine("[HttpPut] Quantity NullOrEmpty");
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(item.Weight.ToString()))
+            {
+                Console.WriteLine("[HttpPut] Weight NullOrEmpty");
+                return BadRequest();
+            }
+
+            Console.WriteLine("Update not supported");
+
+            //if (await _repository.UpdateAsync(item))
+            //    return new NoContentResult();
+            return BadRequest();
+        }
+
+
     }
 }

@@ -16,14 +16,9 @@ namespace SmartFridge.Models
         private static IHostingEnvironment _environment;
         private readonly string _selectAllQuery = "SELECT [ID], [ArticleName], [Quantity], [Weight] FROM Articles";
         private readonly string _selectByIdQuery = "SELECT [ID], [ArticleName], [Quantity], [Weight] FROM Articles WHERE ID=@id";
-        private readonly string _insertQuery = "INSERT INTO Articles ([ID], [ArticleName], [Quantity], [Weight], Recipients, Text) OUTPUT INSERTED.ID VALUES(@param1,@param2,@param3,@param4)";
-
-
-        //private readonly string _selectQuery = "SELECT [Tag[cTD]]], [Check point time], [Threshold value], Direction, Recipients, Text, ID FROM ProvisionsList WHERE ID=@id";
-        //private readonly string _insertQuery = "INSERT INTO ProvisionsList ([Tag[cTD]]], [Check point time], [Threshold value], Direction, Recipients, Text) OUTPUT INSERTED.ID VALUES(@param1,@param2,@param3,@param4,@param5,@param6)";
-        //private readonly string _deleteQuery = "DELETE FROM ProvisionsList WHERE ID=@id";
-        //private readonly string _updateQuery = "UPDATE ProvisionsList SET [Tag[cTD]]] = @param1, [Check point time] = @param2, [Threshold value] = @param3, Direction = @param4, Recipients = @param5, Text = @param6 WHERE ID=@id";
-
+        private readonly string _insertQuery = "INSERT INTO Articles ([ArticleName], [Quantity], [Weight]) OUTPUT INSERTED.ID VALUES(@param1,@param2,@param3)";
+        private readonly string _deleteQuery = "DELETE FROM Articles WHERE ID = @id";
+        private readonly string _updateQuery = "UPDATE Articles SET [ArticleName] = @param1, [Quantity] = @param2, [Weight] = @param3 WHERE ID=@id";
 
         public DBFridgeRepository(IConfiguration configuration, IHostingEnvironment environment)
         {
@@ -93,6 +88,7 @@ namespace SmartFridge.Models
                 cmd.Connection = connection;
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandText = _selectByIdQuery;
+                cmd.Parameters.AddWithValue("@id", id);
 
                 try
                 {
@@ -130,6 +126,10 @@ namespace SmartFridge.Models
 
         public async Task<int> CreateAsync(FridgeItem fridgeItem)
         {
+            Console.WriteLine("[Repo] item: " + fridgeItem.ArticleName);
+            Console.WriteLine("[Repo] item: " + fridgeItem.Weight);
+            Console.WriteLine("[Repo] item: " + fridgeItem.Quantity);
+
             int createdId = 0;
             if (_environment.IsDevelopment())
                 Console.WriteLine("(CreateAsync) in DBFridgeRepository ");
@@ -140,14 +140,14 @@ namespace SmartFridge.Models
                 cmd.Connection = connection;
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandText = _insertQuery;
-                cmd.Parameters.AddWithValue("@param1", fridgeItem.ID);
-                cmd.Parameters.AddWithValue("@param2", fridgeItem.ArticleName);
-                cmd.Parameters.AddWithValue("@param3", fridgeItem.Quantity);
-                cmd.Parameters.AddWithValue("@param4", fridgeItem.Weight);
+                cmd.Parameters.AddWithValue("@param1", fridgeItem.ArticleName);
+                cmd.Parameters.AddWithValue("@param2", fridgeItem.Quantity);
+                cmd.Parameters.AddWithValue("@param3", fridgeItem.Weight);
                 try
                 {
                     connection.Open();
                     createdId = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+                    Console.WriteLine("CreatedID: " + createdId);
                 }
                 catch (Exception e)
                 {
@@ -158,81 +158,69 @@ namespace SmartFridge.Models
             }
             return createdId;
         }
-
-        public Task<bool> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
         
-      
-        //public async Task<bool> DeleteAsync(int id)
-        //{
-        //    int rowsAffected = 0;
-        //    if (_environment.IsDevelopment())
-        //        Console.WriteLine("(DeleteAsync) in DBProvisionRepository ");
+        public async Task<bool> DeleteAsync(int id)
+        {
+            int rowsAffected = 0;
+            if (_environment.IsDevelopment())
+                Console.WriteLine("(DeleteAsync) in DBProvisionRepository ");
 
-        //    using (SqlConnection connection = new SqlConnection(_connectionString))
-        //    using (SqlCommand cmd = new SqlCommand())
-        //    {
-        //        cmd.Connection = connection;
-        //        cmd.CommandType = CommandType.Text;
-        //        cmd.CommandText = _deleteQuery;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = new SqlCommand())
+            {
+                cmd.Connection = connection;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = _deleteQuery;
 
-        //        cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@id", id);
+                try
+                {
+                    connection.Open();
+                    rowsAffected = await cmd.ExecuteNonQueryAsync();
+                    Console.WriteLine("Rows Affected: " + rowsAffected);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message.ToString(), "Error Message");
+                }
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
 
-        //        try
-        //        {
-        //            connection.Open();
-        //            rowsAffected = await cmd.ExecuteNonQueryAsync();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Console.WriteLine(e.Message.ToString(), "Error Message");
-        //        }
-        //        if (connection.State == ConnectionState.Open)
-        //            connection.Close();
-        //    }
+            return rowsAffected != 0;
+        }
 
-        //    return rowsAffected != 0;
-        //}
+        public async Task<bool> UpdateAsync(FridgeItem item)
+        {
+            int rowsAffected = 0;
+            if (_environment.IsDevelopment())
+                Console.WriteLine("(UpdateAsync) in DBFridgeRepository ");
 
-        //public async Task<bool> UpdateAsync(ProvisionItem item)
-        //{
-        //    int rowsAffected = 0;
-        //    if (_environment.IsDevelopment())
-        //        Console.WriteLine("(UpdateAsync) in DBProvisionRepository ");
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = new SqlCommand())
+            {
+                cmd.Connection = connection;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = _updateQuery;
 
-        //    using (SqlConnection connection = new SqlConnection(_connectionString))
-        //    using (SqlCommand cmd = new SqlCommand())
-        //    {
-        //        cmd.Connection = connection;
-        //        cmd.CommandType = CommandType.Text;
-        //        cmd.CommandText = _updateQuery;
+                cmd.Parameters.AddWithValue("@param1", item.ArticleName);
+                cmd.Parameters.AddWithValue("@param2", item.Quantity);
+                cmd.Parameters.AddWithValue("@param3", item.Weight);
+                cmd.Parameters.AddWithValue("@id", item.ID);
+                try
+                {
+                    connection.Open();
+                    rowsAffected = await cmd.ExecuteNonQueryAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message.ToString(), "Error Message");
+                }
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
 
-        //        cmd.Parameters.AddWithValue("@param1", item.TagName);
-        //        cmd.Parameters.AddWithValue("@param2", item.CheckPointTime);
-        //        cmd.Parameters.AddWithValue("@param3", item.ThresholdValue);
-        //        cmd.Parameters.AddWithValue("@param4", item.Direction);
-        //        cmd.Parameters.AddWithValue("@param5", item.Recipients);
-        //        cmd.Parameters.AddWithValue("@param6", item.Text);
-        //        cmd.Parameters.AddWithValue("@id", item.ID);
-        //        try
-        //        {
-        //            connection.Open();
-        //            rowsAffected = await cmd.ExecuteNonQueryAsync();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Console.WriteLine(e.Message.ToString(), "Error Message");
-        //        }
-        //        if (connection.State == ConnectionState.Open)
-        //            connection.Close();
-
-        //    }
-        //    return rowsAffected != 0;
-        //}
-
-
-
+            }
+            return rowsAffected != 0;
+        }
     }
 }

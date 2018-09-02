@@ -48,6 +48,11 @@ namespace SmartFridge.Models
             throw new NotImplementedException();
         }
 
+        public Task<bool> UpdateAsync(FridgeItem item)
+        {
+            throw new NotImplementedException();
+        }
+
         //    private static int _nextId = 4;
 
         //    public async Task<IEnumerable<FridgeItem>> GetAllAsync()
