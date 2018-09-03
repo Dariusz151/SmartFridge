@@ -88,7 +88,7 @@ namespace SmartFridge.Controllers
 
             return BadRequest();
         }
-
+        
         [Route("~/api/SmartFridge")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]

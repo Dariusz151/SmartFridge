@@ -1,7 +1,4 @@
-﻿var urlAddress = "https://localhost:44370/api/SmartFridge";
-
-function OnAddClick() {
-    //$(".addNewForm").append("div class='form'></div>");
+﻿function OnAddClick() {
 
     var data = {};
     data.ArticleName = $("#articleNameInput").val();
@@ -15,12 +12,11 @@ function OnAddClick() {
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function (item, textStatus, jqXHR) {
-            alert('succes');
-            LoadData();
+
         },
         error: function (jqXHR, exception) {
-            alert('serror');
-            LoadData();
+
         }
     });
+    LoadData();
 }

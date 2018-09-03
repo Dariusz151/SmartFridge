@@ -65,10 +65,16 @@
     background-color: azure;
 }
 
-
-
-
 .addItemInput{
     margin-top:10vh;
+}
+
+.form-check-input {
+    /*DO POPRAWY*/
+    float: left;
+}
+
+#trash_div p{
+    float: left;
 }
 
