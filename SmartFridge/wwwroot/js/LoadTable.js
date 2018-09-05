@@ -1,5 +1,5 @@
 ﻿var urlAddress = "https://localhost:44370/api/SmartFridge";
-var articles_id = [];
+var articlesTable = [];
 
 function LoadData() {
     $.ajax({
@@ -8,8 +8,9 @@ function LoadData() {
         dataType: "json",
         contentType: "application/json",
         success: function (fridge) {
-            articles_id = SaveArticlesId(fridge);
-            FillTable(fridge, articles_id);
+
+            SaveArticles(fridge);
+            FillTable(fridge);
         },
         error: function (request, message, error) {
             console.log("error: " + message);
@@ -17,16 +18,16 @@ function LoadData() {
     });
 }
 
-function SaveArticlesId(fridge)
+function SaveArticles(fridge)
 {
-    var tmp = [];
     $.each(fridge, function (index, item) {
-        tmp[index] = item.id;
+        articlesTable[index] = item;
     });
-    return tmp;
+    console.log("Articles: ");
+    console.log(articlesTable);
 }
 
-function FillTable(fridge, articles_id) {
+function FillTable(fridge) {
     $("#cont_tableBody").children().remove();
     
     $.each(fridge, function (index, item) {
