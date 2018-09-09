@@ -33,8 +33,11 @@
     font-size: 1em;
     margin: auto;
     line-height: 5vh;
-    text-decoration: underline;
+    text-decoration: none;
     color: #222222;
+}
+a.headerUnderline{
+    text-decoration: underline !important;
 }
 
 .logoPanel {
@@ -82,3 +85,12 @@
     float:right;
 }
 
+.divider{
+    padding-left: 1vw;
+    padding-right: 1vw;
+}
+
+a#homeHref
+{
+    padding-right:50vw;
+}

@@ -5,29 +5,33 @@
     <meta charset="utf-8" />
     <title>Smart Fridge App</title>
 
-    <link rel="icon" type="image/png" href="images/icons/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <link rel=stylesheet href="css/bootstrap.min.css">
+    <link rel="icon" type="image/png" href="/images/icons/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel=stylesheet href="/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="vendor/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/vendor/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.textfill.js"></script>
+    <script src="/js/ChooseRecipe.js"></script>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.textfill.js"></script>
-    <script src="js/ChooseRecipe.js"></script>
-
-    <script src="js/LoadTable.js"></script>
-    <script src="js/OnAddClick.js"></script>
-    <script src="js/DeleteElement.js"></script>
+    <script src="/js/LoadTable.js"></script>
+    <script src="/js/OnAddClick.js"></script>
+    <script src="/js/DeleteElement.js"></script>
 
 </head>
 
 <body>
     <div class="container-fluid">
         <div class="topHeader">
+
             <div class="centerContent topHeaderText">
+                <a id="homeHref" href="index.html">Home</a><a class="divider"> | </a>
+                <a class="headerUnderline" asp-action="Login" asp-controller="Login">Sign in</a><a class="divider">  |  </a>
+                <a class="headerUnderline" href="Login.html">Log in</a>
+                <a class="divider">  |  </a>
                 <a>Hello,</a>
                 <a>Fridge</a>
             </div>
@@ -37,7 +41,7 @@
         <div class="centerContent">
 
             <div class="logoPanel" id="logoHeader">
-                <img src="images/fridge.png" width="150" height="140">
+                <img src="/images/fridge.png" width="150" height="140">
                 <a>Smart Fridge App.</a>
             </div>
             <div class="chooseRecipeDiv">
