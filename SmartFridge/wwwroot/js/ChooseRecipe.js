@@ -1,11 +1,10 @@
-﻿var recipes = [];
+﻿var recipes = {};
 
 $(document).ready(function () {
     GetAllRecipes();
 });
 
-function ChooseRecipe()
-{
+function ChooseRecipe() {
     var selectedItems = [];
     var idSelector = function () { return this.id; };
     var checked_checkboxes = $(":checkbox:checked").map(idSelector).get();
@@ -19,10 +18,8 @@ function ChooseRecipe()
     selectedItems.forEach(function (value, index) {
         selectedItems_names[index] = articlesTable[articlesTable.findIndex(x => x.id === value)].articleName;
     });
-    
-    var dinnerNumbers = WhichRecipe(selectedItems_names, recipes);
 
-    console.log(dinnerNumbers);
+    var dinnerNumbers = WhichRecipe(selectedItems_names, recipes);
 }
 
 function ContainsAll(array1, array2) {
@@ -30,20 +27,22 @@ function ContainsAll(array1, array2) {
 }
 
 function GetAllRecipes() {
-    for (var k = 0; k < 16; k++) {
-        $.getJSON("/recipes/dinners/dinner" + (k + 1) + ".json", function (json) {
-            recipes.push(json);
-        });
-    }
+
+    $.getJSON("/recipes/dinners/dinners.json", function (json) {
+        console.log(json);
+        recipes = json;
+    });
 }
 
 function WhichRecipe(selectedItems_names, recipes) {
     var dinnerNumbers = [];
-
-    for (var k = 0; k < recipes.length; k++) {
-        if (ContainsAll(selectedItems_names, recipes[k].components))
-            dinnerNumbers.push(k);
+    var name = "";
+    console.log("dlugos " + Object.keys(recipes).length);
+    for (var k = 1; k <= Object.keys(recipes).length; k++) {
+        name = "dinner_" + k;
+        if (ContainsAll(selectedItems_names, recipes[name].components))
+            dinnerNumbers.push(name);
+        console.log(recipes[name].components);
     }
-    
     return dinnerNumbers;
 }
