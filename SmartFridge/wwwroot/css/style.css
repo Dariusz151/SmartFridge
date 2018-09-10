@@ -94,3 +94,7 @@ a#homeHref
 {
     padding-right:50vw;
 }
+
+#loginForm{
+    width:20vw;
+}
