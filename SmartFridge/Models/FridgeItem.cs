@@ -8,5 +8,6 @@ namespace SmartFridge.Models
         public string ArticleName { get; set; }
         public int Quantity { get; set; }
         public int Weight { get; set; }
+        public int CategoryID { get; set; }
     }
 }

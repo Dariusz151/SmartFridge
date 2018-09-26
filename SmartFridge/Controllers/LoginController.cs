@@ -22,30 +22,30 @@ namespace SmartFridge.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginAsync([FromBody] UserDTO user)
         {
-            bool isSuccess = false;
-            Console.WriteLine("[Controller] item: " + user.Username);
-            Console.WriteLine("[Controller] item: " + user.Password);
+            int userID = 0;
+            Console.WriteLine("[Controller Login] item: " + user.Login);
+            Console.WriteLine("[Controller Login] item: " + user.Password);
 
             if (user == null)
             {
-                Console.WriteLine("[HttpPost] Jestem w Item=Null, zwracam BadRequest");
+                Console.WriteLine("[HttpPost Controller Login] Jestem w Item=Null, zwracam BadRequest");
                 return BadRequest();
             }
-            if (string.IsNullOrEmpty(user.Username))
+            if (string.IsNullOrEmpty(user.Login))
             {
-                Console.WriteLine("[HttpPost] Username NullOrEmpty");
+                Console.WriteLine("[HttpPost Controller Login] Username NullOrEmpty");
                 return BadRequest();
             }
             if (string.IsNullOrEmpty(user.Password))
             {
-                Console.WriteLine("[HttpPost]Password NullOrEmpty");
+                Console.WriteLine("[HttpPost Controller Login] Password NullOrEmpty");
                 return BadRequest();
             }
 
-            isSuccess = _repository.LoginAsync(user).Result;
-            Console.WriteLine("Controller, isSuccess: " + isSuccess);
-            if (isSuccess)
-                return Ok();
+            userID = _repository.LoginAsync(user).Result;
+            Console.WriteLine("Controller Login, isSuccess: " + userID);
+            if (userID > 0)
+                return Json(userID);
             return BadRequest();
         }
     }

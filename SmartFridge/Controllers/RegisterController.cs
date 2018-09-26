@@ -35,27 +35,30 @@ namespace SmartFridge.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterAsync([FromBody] UserDTO user)
         {
-            Console.WriteLine("[Controller] item: " + user.Username);
+            Console.WriteLine("[Controller] item: " + user.Login);
+            Console.WriteLine("[Controller] item: " + user.Firstname);
+            Console.WriteLine("[Controller] item: " + user.Email);
+            Console.WriteLine("[Controller] item: " + user.Phone);
             Console.WriteLine("[Controller] item: " + user.Password);
 
             if (user == null)
             {
-                Console.WriteLine("[HttpPost] Jestem w Item=Null, zwracam BadRequest");
+                Console.WriteLine("[HttpPost RegisterController] Jestem w Item=Null, zwracam BadRequest");
                 return BadRequest();
             }
-            if (string.IsNullOrEmpty(user.Username))
+            if (string.IsNullOrEmpty(user.Login))
             {
-                Console.WriteLine("[HttpPost] Username NullOrEmpty");
+                Console.WriteLine("[HttpPost RegisterController] Login NullOrEmpty");
                 return BadRequest();
             }
             if (string.IsNullOrEmpty(user.Password))
             {
-                Console.WriteLine("[HttpPost]Password NullOrEmpty");
+                Console.WriteLine("[HttpPost RegisterController] Password NullOrEmpty");
                 return BadRequest();
             }
             
             int createdId = await _repository.RegisterAsync(user);
-            Console.WriteLine("Controller, createdID: " + createdId);
+            Console.WriteLine("RegisterController, createdID: " + createdId);
             if (createdId > 0)
                 return Json(createdId);
             return BadRequest();

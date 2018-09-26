@@ -8,7 +8,7 @@ namespace SmartFridge.Models
 {
     public interface IUsersRepository
     {
-        Task<bool> LoginAsync(UserDTO user);
+        Task<int> LoginAsync(UserDTO user);
         Task<int> RegisterAsync(UserDTO user);
     }
 }

@@ -43,7 +43,7 @@ namespace SmartFridge.Models
             throw new NotImplementedException();
         }
 
-        public Task<FridgeItem> GetAsync(int id)
+        public Task<IEnumerable<FridgeItem>> GetAsync(int id)
         {
             throw new NotImplementedException();
         }

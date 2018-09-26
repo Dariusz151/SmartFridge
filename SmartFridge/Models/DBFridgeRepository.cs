@@ -14,8 +14,8 @@ namespace SmartFridge.Models
     {
         private static string _connectionString;    // "Server=DESKTOP-U1KKR9S\\SQLEXPRESS;Database=FridgeDB;Trusted_Connection=True;";
         private static IHostingEnvironment _environment;
-        private readonly string _selectAllQuery = "SELECT [ID], [ArticleName], [Quantity], [Weight] FROM Articles";
-        private readonly string _selectByIdQuery = "SELECT [ID], [ArticleName], [Quantity], [Weight] FROM Articles WHERE ID=@id";
+        private readonly string _selectAllQuery = "SELECT [id_article], [article_name], [quantity], [weight], [id_user], [id_category] FROM [dbo].[articles]";
+        private readonly string _selectByIdQuery = "SELECT [id_article], [article_name], [quantity], [weight], [id_category] FROM [dbo].[articles] WHERE id_user=@id";
         private readonly string _insertQuery = "INSERT INTO Articles ([ArticleName], [Quantity], [Weight]) OUTPUT INSERTED.ID VALUES(@param1,@param2,@param3)";
         private readonly string _deleteQuery = "DELETE FROM Articles WHERE ID = @id";
         private readonly string _updateQuery = "UPDATE Articles SET [ArticleName] = @param1, [Quantity] = @param2, [Weight] = @param3 WHERE ID=@id";
@@ -28,6 +28,7 @@ namespace SmartFridge.Models
 
         public async Task<IEnumerable<FridgeItem>> GetAllAsync()
         {
+            Console.WriteLine("GetAllAsync()");
             IList<FridgeItem> list = null;
             if (_environment.IsDevelopment())
                 Console.WriteLine("(GetAllAsync) in DBFridgeRepos");
@@ -56,7 +57,8 @@ namespace SmartFridge.Models
                                     ID = reader.GetInt32(0),
                                     ArticleName = reader.GetString(1),
                                     Quantity = reader.GetInt32(2),
-                                    Weight = reader.GetInt32(3)
+                                    Weight = reader.GetInt32(3),
+                                    CategoryID = reader.GetInt32(5)
                                 });
                             }
                         }
@@ -76,11 +78,11 @@ namespace SmartFridge.Models
             return list;
         }
 
-        public async Task<FridgeItem> GetAsync(int id)
+        public async Task<IEnumerable<FridgeItem>> GetAsync(int id)
         {
-            FridgeItem item = null;
+            IList<FridgeItem> list = null;
             if (_environment.IsDevelopment())
-                Console.WriteLine("(GetAllAsync) in DBFridgeRepos");
+                Console.WriteLine("(GetAsync) in DBFridgeRepos. ID :" + id);
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand())
@@ -99,14 +101,17 @@ namespace SmartFridge.Models
                     {
                         if (reader.HasRows)
                         {
+                            list = new List<FridgeItem>();
                             reader.Read();
-                            item = new FridgeItem()
+                            list.Add(new FridgeItem()
                             {
                                 ID = reader.GetInt32(0),
                                 ArticleName = reader.GetString(1),
                                 Quantity = reader.GetInt32(2),
-                                Weight = reader.GetInt32(3)
-                            };
+                                Weight = reader.GetInt32(3),
+                                CategoryID = reader.GetInt32(4)
+                            });
+                            //Console.WriteLine("Item: " + item);
                         }
                         else
                         {
@@ -121,7 +126,7 @@ namespace SmartFridge.Models
                 if (connection.State == ConnectionState.Open)
                     connection.Close();
             }
-            return item;
+            return list;
         }
 
         public async Task<int> CreateAsync(FridgeItem fridgeItem)
