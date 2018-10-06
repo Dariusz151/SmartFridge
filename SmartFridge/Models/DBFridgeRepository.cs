@@ -15,7 +15,7 @@ namespace SmartFridge.Models
         private static string _connectionString;    // "Server=DESKTOP-U1KKR9S\\SQLEXPRESS;Database=FridgeDB;Trusted_Connection=True;";
         private static IHostingEnvironment _environment;
         private readonly string _selectAllQuery = "SELECT [id_article], [article_name], [quantity], [weight], [id_user], [id_category] FROM [dbo].[articles]";
-        private readonly string _selectByIdQuery = "SELECT [id_article], [article_name], [quantity], [weight], [id_category] FROM [dbo].[articles] WHERE id_user=@id";
+        private readonly string _selectByIdQuery = "SELECT [id_article], [article_name], [quantity], [weight], [id_user], [id_category] FROM [dbo].[articles] WHERE id_user=@id";
         private readonly string _insertQuery = "INSERT INTO Articles ([ArticleName], [Quantity], [Weight]) OUTPUT INSERTED.ID VALUES(@param1,@param2,@param3)";
         private readonly string _deleteQuery = "DELETE FROM Articles WHERE ID = @id";
         private readonly string _updateQuery = "UPDATE Articles SET [ArticleName] = @param1, [Quantity] = @param2, [Weight] = @param3 WHERE ID=@id";
@@ -102,16 +102,17 @@ namespace SmartFridge.Models
                         if (reader.HasRows)
                         {
                             list = new List<FridgeItem>();
-                            reader.Read();
-                            list.Add(new FridgeItem()
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(0),
-                                ArticleName = reader.GetString(1),
-                                Quantity = reader.GetInt32(2),
-                                Weight = reader.GetInt32(3),
-                                CategoryID = reader.GetInt32(4)
-                            });
-                            //Console.WriteLine("Item: " + item);
+                                list.Add(new FridgeItem()
+                                {
+                                    ID = reader.GetInt32(0),
+                                    ArticleName = reader.GetString(1),
+                                    Quantity = reader.GetInt32(2),
+                                    Weight = reader.GetInt32(3),
+                                    CategoryID = reader.GetInt32(4)
+                                });
+                            }
                         }
                         else
                         {

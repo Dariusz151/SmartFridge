@@ -1,9 +1,15 @@
 ﻿function OnAddClick() {
+    var userID = localStorage.getItem("userID");
+
+    var ulrAdress = "https://localhost:44370/api/SmartFridge";
 
     var data = {};
     data.ArticleName = $("#articleNameInput").val();
     data.Quantity = $("#quantityInput").val();
     data.Weight = $("#weightInput").val();
+    data.userID = userID;
+
+    console.log(data);
 
     $.ajax({
         url: urlAddress,
@@ -18,5 +24,5 @@
 
         }
     });
-    LoadData();
+    //LoadData();
 }

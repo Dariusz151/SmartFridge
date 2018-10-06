@@ -1,12 +1,10 @@
-﻿var urlAddress = "https://localhost:44370/api/SmartFridge";
-var articlesTable = [];
-
-$(window).on('load', function () {
-    var id = localStorage.getItem("userID");
-    LoadTableByUser(id);
-})
+﻿var articlesTable = [];
+var id = localStorage.getItem("userID");
 
 function LoadTableByUser(userID) {
+    
+    var urlAddress = "https://localhost:44370/api/SmartFridge";
+
     $.ajax({
         url: urlAddress + "/" + userID,
         type: "GET",
@@ -56,3 +54,5 @@ function AddFridgeItemToTable(index, item) {
     $("#row" + index).append("<div class='col-lg-1 col_functions'></div>");
     $("#row" + index + " .col_functions").html("<input class='form-check-input position-static' type='checkbox' id='checkbox" + index + "' value='option1' aria-label='aria'>");
 }
+
+LoadTableByUser(id);

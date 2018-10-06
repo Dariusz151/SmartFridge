@@ -51,4 +51,4 @@ function AddFridgeItemToTable(index, item) {
     $("#row" + index + " .col_functions").html("<input class='form-check-input position-static' type='checkbox' id='checkbox" + index +"' value='option1' aria-label='aria'>");
 }
 
-LoadData();
+//LoadData();

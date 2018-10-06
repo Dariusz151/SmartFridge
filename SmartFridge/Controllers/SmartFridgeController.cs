@@ -34,8 +34,13 @@ namespace SmartFridge.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAsync(int id)
         {
-            Console.WriteLine("controller, id; " + id);
+            Console.WriteLine("SmartFridgeController, userid; " + id);
             var list = await _repository.GetAsync(id);
+            Console.WriteLine("Controoler, list : ");
+            foreach (var e in list)
+            {
+                Console.WriteLine(e.ArticleName);
+            }
             if (list == null)
                 return NotFound();
             return Json(list);
